@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
-      <script src="app.js"></script>
-    <title></title>
-  </head>
-  <body>
-    <form>
-      <label for="team-name">Team Name</label>
-      <input type="text" id="team-name" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="app.js"></script>
+    <title>WWLTW Email Generator</title>
+</head>
+<body>
+<div class="container">
+    <div class="well">
+        <div class="row">
+            <form class="col-md-6 col-md-offset-3">
+                <div class="form-group">
+                    <label for="team-name">Team Name</label>
+                    <input type="text" id="team-name" class="form-control"/>
+                </div>
 
-      <h2>What we learned this week</h2>
-      <div id="item-wrapper">
+                <h2>What we learned this week</h2>
+                <div id="item-wrapper">
 
-      </div>
-      <input type="submit" value="Generate email">
-    </form>
-  </body>
+                </div>
+                <input type="submit" value="Generate email" class="btn btn-primary pull-right">
+            </form>
+        </div>
+    </div>
+    <div class="formatted-email"></div>
+</div>
+</body>
 </html>
