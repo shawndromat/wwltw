@@ -1,9 +1,9 @@
 import {tagList} from './tagList';
 
 let escapeHtml = (text) => {
-  return text.replace(/[\"&<>]/g, (a) => {
-    return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a];
-  });
+    return text.replace(/[\"&<>]/g, (a) => {
+        return {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}[a];
+    });
 };
 
 class Item {
@@ -18,28 +18,28 @@ class Item {
     }
 
     getTags() {
-      return this.findTags(this.$elem.find('.ui.visible'))
+        return this.findTags(this.$elem.find('.ui.visible'))
     }
 
     getContent() {
-      return escapeHtml(this.$elem.find('textarea').val())
+        return escapeHtml(this.$elem.find('textarea').val())
     }
 
     formattedTags() {
-      let tags = this.getTags();
-      return (tags.length > 0) ? `Tags: ${tags.join(', ')}` : ''
+        let tags = this.getTags();
+        return (tags.length > 0) ? `Tags: ${tags.join(', ')}` : ''
     }
 
     formattedContent() {
         let content = this.getContent();
 
-        if(content !== "") {
+        if (content !== "") {
             return `<li>
                     ${content} <br/>
                     ${this.formattedTags()}
                 </li>`
         } else {
-          return ""
+            return ""
         }
     }
 
@@ -47,16 +47,16 @@ class Item {
         let tags = this.getTags().join(', ')
         let content = this.getContent()
         if (content !== "" && tags !== "") {
-          return `${content}\nTags: ${tags}\n`
+            return `${content}\nTags: ${tags}\n`
         } else {
-          return ""
+            return ""
         }
     }
 
     populateTags() {
         let tagHtml = '';
         tagList.map((tag) => {
-           tagHtml += `<option value="${tag}">${tag}</option>`
+            tagHtml += `<option value="${tag}">${tag}</option>`
         });
 
         return tagHtml;
@@ -87,13 +87,22 @@ class Item {
 class Form {
     constructor(formSelector, previewSelector) {
         this.$elem = $(formSelector);
-        this.$teamName = this.$elem.find('#team-name');
+        this.$teamName = this.$elem.find('#teamName');
         this.$previewElem = $(previewSelector);
         this.items = [];
         this.generateItems();
-        this.$elem.on('input', 'input', () => {this.displayPreview()})
-        this.$elem.on('keyup', 'textarea', () => {this.displayPreview()})
-        this.$elem.on('change', 'input', () => {this.displayPreview()})
+        this.$elem.on('input', 'input', () => {
+            this.displayPreview()
+        })
+        this.$elem.on('keyup', 'textarea', () => {
+            this.displayPreview()
+        })
+        this.$elem.on('change', 'input', () => {
+            this.displayPreview()
+        })
+        this.$elem.on('submit', (e) => {
+            this.onSubmit(e);
+        });
         this.displayPreview()
     }
 
@@ -103,45 +112,60 @@ class Form {
         })
     }
 
+    onSubmit(e) {
+        e.preventDefault();
+        window.open(this.generateGoogleGroupUrl(), "_blank" )
+    }
+
     getTeamName() {
-      return escapeHtml(this.$teamName.val())
+        return escapeHtml(this.$teamName.val())
     }
 
     getSubject() {
-      return `[WWLTW] ${this.getTeamName()}`
+        return `${this.getTeamName()}`
     }
 
     getSignature() {
-      let teamName = this.getTeamName()
-      return teamName ? `- ${teamName}` : ""
+        let teamName = this.getTeamName()
+        return teamName ? `- ${teamName}` : ""
     }
 
     getItems() {
-      return this.items.map((item) => {
-        return item.formattedContent();
-      }).join("")
+        return this.items.map((item) => {
+            return item.formattedContent();
+        }).join("")
+    }
+
+    generateGoogleGroupUrl(){
+        let emailRecipent = encodeURIComponent('wwltw@googlegroups.com');
+        let emailSubject = encodeURIComponent(this.getSubject());
+        let emailItems = this.items.map((item) => {
+            return item.emailBodyContent()
+        }).join("");
+        let emailBody = encodeURIComponent(emailItems);
+        return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
     }
 
     generatePivotalkUrl() {
-      let emailRecipent = encodeURIComponent('pivotalk+wwltw@gmail.com')
-      let emailSubject = encodeURIComponent(this.getSubject())
-      let emailItems = this.items.map((item) => {
-        return item.emailBodyContent()
-      }).join("")
-      let emailBody = encodeURIComponent(emailItems)
-      return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
+        let emailRecipent = encodeURIComponent('pivotalk+wwltw@gmail.com');
+        let emailSubject = encodeURIComponent(this.getSubject());
+        let emailItems = this.items.map((item) => {
+            return item.emailBodyContent()
+        }).join("");
+        let emailBody = encodeURIComponent(emailItems);
+        return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
     }
 
     sendToPivotalkButton() {
-      if (this.getTeamName() !== "" && this.getItems() !== "") {
-        return `<a class="btn btn-primary" target="_blank" href=${this.generatePivotalkUrl()}>Send to Pivotalk</a>`
-      } else {
-        return ""
-      }
+        if (this.getTeamName() !== "" && this.getItems() !== "") {
+            return `<a class="btn btn-primary" target="_blank" href=${this.generatePivotalkUrl()}>Send to Pivotalk</a>`
+        } else {
+            return ""
+        }
     }
 
     generatePreview() {
-      return  `
+        return `
       <table>
         <tbody>
           <tr>
@@ -168,7 +192,7 @@ class Form {
     }
 
     displayPreview() {
-      this.$previewElem.html(this.generatePreview())
+        this.$previewElem.html(this.generatePreview())
     }
 
     generateItems() {
@@ -180,7 +204,19 @@ class Form {
     }
 }
 
+
 $(() => {
     new Form('form', '#email-preview');
     $('.ui.fluid.dropdown').dropdown();
+    $('.ui.form').form({
+        teamName: {
+            identifier: 'teamName',
+            rules: [
+                {
+                    type: 'empty',
+                    prompt: 'Please enter a Team Name'
+                }
+            ]
+        }
+    })
 });
