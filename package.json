@@ -2,11 +2,12 @@
   "name": "wwltw",
   "version": "0.0.1",
   "scripts": {
-    "build": "npm run build:app && npm run copy:jquery && npm run copy:static && npm run copy:bootstrap",
+    "build": "npm run build:app && npm run copy:jquery && npm run copy:static && npm run copy:bootstrap && npm run copy:semantic",
     "build:app": "browserify -e ./app/index.js -o ./dist/app.js",
     "copy:jquery": "cpy 'node_modules/jquery/dist/jquery.min.js' ./dist/scripts/",
     "copy:bootstrap": "cpy node_modules/bootstrap/dist/css/bootstrap.min.css ./dist",
-    "copy:static": "cpy './index.html' ./dist/"
+    "copy:static": "cpy './index.html' ./dist/",
+    "copy:semantic": "cpy 'semantic/dist/semantic.css' ./dist && cpy 'semantic/dist/semantic.js' ./dist && cp -r semantic/dist/themes ./dist "
   },
   "dependencies": {
     "babel-core": "6.3.x",
@@ -17,9 +18,10 @@
     "jquery": "^3.1.1",
     "npm-run-all": "1.4.x",
     "sassify": "0.9.x",
-    "semantic-ui": "2.1.x"
+    "semantic-ui": "^2.2.7"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
     "jasmine": "^2.5.3"
   },
   "browserify": {
