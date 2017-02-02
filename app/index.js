@@ -18,7 +18,11 @@ class Item {
     }
 
     getTags() {
-      return this.findTags(this.$elem.find('input:checked'))
+      return this.findTags(this.$elem.find('.ui.visible'))
+    }
+
+    getContent() {
+      return escapeHtml(this.$elem.find('textarea').val())
     }
 
     formattedTags() {
@@ -27,7 +31,7 @@ class Item {
     }
 
     formattedContent() {
-        let content = escapeHtml(this.$elem.find('textarea').val());
+        let content = this.getContent();
 
         if(content !== "") {
             return `<li>
@@ -40,10 +44,12 @@ class Item {
     }
 
     emailBodyContent() {
-        let content = this.$elem.find('textarea').val();
-        let tags = this.findTags(this.$elem.find('input:checked')).join(', ');
-        if(content !== "" && tags.length != 0) {
-            return (content + '\n' + 'Tags: ' + tags + '\n');
+        let tags = this.getTags().join(', ')
+        let content = this.getContent()
+        if (content !== "" && tags !== "") {
+          return `${content}\nTags: ${tags}\n`
+        } else {
+          return ""
         }
     }
 
@@ -101,6 +107,10 @@ class Form {
       return escapeHtml(this.$teamName.val())
     }
 
+    getSubject() {
+      return `[WWLTW] ${this.getTeamName()}`
+    }
+
     getSignature() {
       let teamName = this.getTeamName()
       return teamName ? `- ${teamName}` : ""
@@ -110,6 +120,24 @@ class Form {
       return this.items.map((item) => {
         return item.formattedContent();
       }).join("")
+    }
+
+    generatePivotalkUrl() {
+      let emailRecipent = encodeURIComponent('pivotalk+wwltw@gmail.com')
+      let emailSubject = encodeURIComponent(this.getSubject())
+      let emailItems = this.items.map((item) => {
+        return item.emailBodyContent()
+      }).join("")
+      let emailBody = encodeURIComponent(emailItems)
+      return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
+    }
+
+    sendToPivotalkButton() {
+      if (this.getTeamName() !== "" && this.getItems() !== "") {
+        return `<a class="btn btn-primary" target="_blank" href=${this.generatePivotalkUrl()}>Send to Pivotalk</a>`
+      } else {
+        return ""
+      }
     }
 
     generatePreview() {
@@ -122,7 +150,7 @@ class Form {
           </tr>
           <tr>
             <td class="col-xs-3">Subject:</td>
-            <td class="col-xs-9">[WWLTW] ${this.getTeamName()}</td>
+            <td class="col-xs-9">${this.getSubject()}</td>
           </tr>
           <tr>
             <td class="col-xs-3">Body:</td>
@@ -135,6 +163,7 @@ class Form {
           </tr>
         </tbody>
       </table>
+      ${this.sendToPivotalkButton()}
       `
     }
 
