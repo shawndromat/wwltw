@@ -40,8 +40,11 @@ class Item {
     }
 
     emailBodyContent() {
+        let content = this.$elem.find('textarea').val();
         let tags = this.findTags(this.$elem.find('input:checked')).join(', ');
-        return (this.$elem.find('textarea').val() + '\n' + 'Tags: ' + tags + '\n');
+        if(content !== "" && tags.length != 0) {
+            return (content + '\n' + 'Tags: ' + tags + '\n');
+        }
     }
 
     populateTags() {
@@ -142,7 +145,7 @@ class Form {
     generateItems() {
         for (let i = 1; i < 4; i++) {
             let item = new Item(i);
-            this.items.push(item)
+            this.items.push(item);
             this.$elem.find('#item-wrapper').append(item.$elem);
         }
     }
