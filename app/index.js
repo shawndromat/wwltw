@@ -5,13 +5,13 @@ class Item {
 
     findTags(tagList) {
         return $.map(tagList, (tag) => {
-            return $(tag).val()
+            return $(tag).data().value
         })
     }
 
     formattedContent() {
         let content = this.$elem.find('textarea').val();
-        let tags = this.findTags(this.$elem.find('input:checked'));
+        let tags = this.findTags(this.$elem.find('.ui.visible'));
         if(content !== "" && tags.length != 0) {
             return `<li>
                     ${content} <br/>
@@ -46,16 +46,13 @@ class Item {
                     </div>
                     <div class="checkbox">
                         <h4>Tags </h4>
-                        <select name="tags" multiple="" class="ui fluid dropdown">
+                        <select name="tags" multiple="" class="ui fluid search dropdown">
                             <option value="">Tags</option>
                             ${this.populateTags()}
                         </select>
                     </div>
                 </div>
             `
-        // <label for=${"item-" + id + "java"}><input type="checkbox" id=${"item-" + id + "java"} value="java" />Java</label>
-        // <label for=${"item-" + id + "ruby"}><input type="checkbox" id=${"item-" + id + "ruby"} value="ruby" />Ruby</label>
-        // <label for=${"item-" + id + "discussion"}><input type="checkbox" id=${"item-" + id + "discussion"} value="discussion" />Discussion</label>
     }
 
 
