@@ -1,8 +1,10 @@
+import {tagList} from './tagList';
+
 let escapeHtml = (text) => {
   return text.replace(/[\"&<>]/g, (a) => {
     return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a];
   });
-}
+};
 
 class Item {
     constructor(id) {
@@ -43,7 +45,6 @@ class Item {
     }
 
     populateTags() {
-        var tagList = ['ruby', 'js'];
         let tagHtml = '';
         tagList.map((tag) => {
            tagHtml += `<option value="${tag}">${tag}</option>`
