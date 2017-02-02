@@ -1,3 +1,9 @@
+let escapeHtml = (text) => {
+  return text.replace(/[\"&<>]/g, (a) => {
+    return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a];
+  });
+}
+
 class Item {
     constructor(id) {
         this.$elem = $(this.generateItem(id))
@@ -9,15 +15,25 @@ class Item {
         })
     }
 
+    getTags() {
+      return this.findTags(this.$elem.find('input:checked'))
+    }
+
+    formattedTags() {
+      let tags = this.getTags();
+      return (tags.length > 0) ? `Tags: ${tags.join(', ')}` : ''
+    }
+
     formattedContent() {
-        let content = this.$elem.find('textarea').val();
-        let tags = this.findTags(this.$elem.find('.ui.visible'));
-        if(content !== "" && tags.length != 0) {
+        let content = escapeHtml(this.$elem.find('textarea').val());
+
+        if(content !== "") {
             return `<li>
                     ${content} <br/>
-                    Tags: ${tags.join(', ')}
-                </li>
-                <br/>`
+                    ${this.formattedTags()}
+                </li>`
+        } else {
+          return ""
         }
     }
 
@@ -38,7 +54,7 @@ class Item {
 
     generateItem(id) {
         return `
-        
+
                 <div data-item-id=${id}>
                     <div class="form-group">
                         <h3 for=${"item-" + id}>Item ${id}</h3>
@@ -59,14 +75,16 @@ class Item {
 }
 
 class Form {
-    constructor(selector) {
-        this.$elem = $(selector);
+    constructor(formSelector, previewSelector) {
+        this.$elem = $(formSelector);
         this.$teamName = this.$elem.find('#team-name');
-        this.$elem.on('submit', (e) => {
-            this.onSubmit(e)
-        });
+        this.$previewElem = $(previewSelector);
         this.items = [];
         this.generateItems();
+        this.$elem.on('input', 'input', () => {this.displayPreview()})
+        this.$elem.on('keyup', 'textarea', () => {this.displayPreview()})
+        this.$elem.on('change', 'input', () => {this.displayPreview()})
+        this.displayPreview()
     }
 
     findTags(tagList) {
@@ -75,43 +93,49 @@ class Form {
         })
     }
 
-    onSubmit(e) {
-        e.preventDefault();
-        let teamName = this.$teamName.val();
-        let emailContent = '';
+    getTeamName() {
+      return escapeHtml(this.$teamName.val())
+    }
 
-        let formattedEmail = `
-        <div class="well">
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3 ">
-                    <p>Subject: ${teamName}</p>
-                    <p>To: wwltw@pivotal.io</p>
-                    <p>Body:</p>
-                    <ol>      
-        `;
+    getSignature() {
+      let teamName = this.getTeamName()
+      return teamName ? `- ${teamName}` : ""
+    }
 
-        this.items.map((item) => {
-            if(item.formattedContent()){
-                formattedEmail += item.formattedContent();
-                emailContent += item.emailBodyContent();
-            }
-        });
+    getItems() {
+      return this.items.map((item) => {
+        return item.formattedContent();
+      }).join("")
+    }
 
-        var emailRecipent = encodeURIComponent('pivotalk+wwltw@gmail.com')
-        var emailSubject = encodeURIComponent(`WWLTW ${teamName}`);
-        var emailBody = encodeURIComponent(emailContent);
+    generatePreview() {
+      return  `
+      <table>
+        <tbody>
+          <tr>
+            <td class="col-xs-3">To:</td>
+            <td class="col-xs-9">wwltw@pivotal.io</td>
+          </tr>
+          <tr>
+            <td class="col-xs-3">Subject:</td>
+            <td class="col-xs-9">[WWLTW] ${this.getTeamName()}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-3">Body:</td>
+            <td class="col-xs-9">
+              <ol>
+                ${this.getItems()}
+              </ol>
+              <p>${this.getSignature()}</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      `
+    }
 
-        formattedEmail +=
-            `
-                    </ol>
-                    <p>-${teamName} team</p>
-                </div>
-            </div>
-            <a class="btn btn-primary" target="_blank" href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}">Send</a>
-            </div>
-            `
-
-        $('.formatted-email').empty().append(formattedEmail);
+    displayPreview() {
+      this.$previewElem.html(this.generatePreview())
     }
 
     generateItems() {
@@ -124,7 +148,6 @@ class Form {
 }
 
 $(() => {
-    new Form('form');
-     $('.ui.fluid.dropdown').dropdown();
+    new Form('form', '#email-preview');
+    $('.ui.fluid.dropdown').dropdown();
 });
-

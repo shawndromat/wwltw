@@ -6,28 +6,38 @@
     <link rel="stylesheet" href="bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="semantic.css">
     <script src="semantic.js"></script>
+    <link rel="stylesheet" href="app.css">
     <script src="app.js"></script>
     <title>WWLTW Email Generator</title>
 </head>
 <body>
+  <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand">What We Learned This Week (WWLTW) Email Generator</a>
+    </div>
+  </div><!-- /.container-fluid -->
+</nav>
 <div class="container">
-    <div class="well">
-        <div class="row">
-            <form class="col-md-6 col-md-offset-3">
+    <div class="row">
+        <div class="well col-md-5">
+            <form>
                 <div class="form-group">
                     <label for="team-name">Team Name</label>
                     <input type="text" id="team-name" class="form-control"/>
                 </div>
 
-                <h2>What we learned this week</h2>
-                <div id="item-wrapper">
-
-                </div>
-                <input type="submit" value="Generate email" class="btn btn-primary pull-right">
+                <h3>What we learned this week</h3>
+                <div id="item-wrapper"></div>
             </form>
+            <div class="formatted-email col-md-6"></div>
+        </div>
+        <div class="well col-md-6 col-md-offset-1">
+          <h3>Email preview</h3>
+          <div id="email-preview"></div>
         </div>
     </div>
-    <div class="formatted-email"></div>
+
 </div>
 </body>
 </html>
