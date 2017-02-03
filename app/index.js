@@ -8,20 +8,4 @@ export const escapeHtml = (text) => {
 
 $(() => {
     var form = new Form('form', '#email-preview');
-    $('.ui.form')
-        .form({
-            name: {
-                identifier  : 'teamName',
-                rules: [
-                    {
-                        type   : 'empty',
-                        prompt : 'Please enter your team name'
-                    }
-                ]
-            }
-        }, {
-            onSuccess: function(e) {
-                form.onSubmit(e);
-            }
-        });
 });

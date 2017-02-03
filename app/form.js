@@ -7,6 +7,7 @@ export class Form {
         this.$teamName = this.$elem.find('#teamName');
         this.$previewElem = $(previewSelector);
         this.items = [];
+        this.errors = [];
         this.generateItems();
         $('.ui.fluid.dropdown').dropdown();
 
@@ -20,6 +21,10 @@ export class Form {
             this.displayPreview()
         });
 
+        this.$elem.on('submit', (e) => {
+            this.onSubmit(e)
+        });
+
         this.displayPreview()
     }
 
@@ -31,10 +36,18 @@ export class Form {
 
     onSubmit(e) {
         e.preventDefault();
-        window.open(this.generateGoogleGroupUrl(), "_blank" )
 
-        for (var i = 0; i < this.items.length; i++) {
-            this.items[i].openPivotalkEmails()
+        if (this.validate()) {
+            window.open(this.generateGoogleGroupUrl(), "_blank" );
+
+            for (var i = 0; i < this.items.length; i++) {
+                this.items[i].openPivotalkEmails()
+            }
+        } else {
+            this.errors.map((error) => {
+                let $li = $(`<li>${error}</li>`)
+                this.$elem.find('.errors').append($li)
+            })
         }
     }
 
@@ -47,7 +60,7 @@ export class Form {
     }
 
     getSignature() {
-        let teamName = this.getTeamName()
+        let teamName = this.getTeamName();
         return teamName ? `- ${teamName}` : ""
     }
 
@@ -55,6 +68,50 @@ export class Form {
         return this.items.map((item) => {
             return item.formattedContent();
         }).join("")
+    }
+
+    validate() {
+        this.errors = []
+        this.$elem.find('.errors').empty();
+
+        this.itemsValid()
+        this.atLeastOneItem()
+        this.hasTeamName()
+
+        return this.errors.length === 0
+    }
+
+    invalidItems() {
+        return this.items.filter((item) => {
+            return !item.isValid()
+        })
+    }
+
+    itemsValid(){
+        let itemsAreValid = this.invalidItems().length === 0;
+        if(!itemsAreValid){
+            this.errors.push('Item must have content and tag')
+        }
+        return itemsAreValid
+    }
+
+    atLeastOneItem() {
+        let atLeastOneItem = this.items.filter((item) => {
+            return !item.isEmpty()
+        }).length > 0;
+
+        if(!atLeastOneItem){
+            this.errors.push('There must be atleast one item')
+        }
+        return atLeastOneItem;
+    }
+
+    hasTeamName() {
+        if(this.getTeamName() == ''){
+            this.errors.push('Team name should not be empty');
+            return false;
+        }
+        return true;
     }
 
     generateGoogleGroupUrl(){

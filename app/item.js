@@ -27,6 +27,15 @@ export class Item {
         })
     }
 
+    isEmpty() {
+        return this.getContent() == '' && this.getTags().length == 0
+    }
+
+    isValid() {
+        if (this.isEmpty()) { return true }
+       return this.getContent() != '' && this.getTags().length > 0
+    }
+
     formattedTags() {
         let tags = this.getTags();
         return (tags.length > 0) ? `Tags: ${tags.join(', ')}` : ''
