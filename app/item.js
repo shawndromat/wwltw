@@ -8,12 +8,12 @@ export class Item {
 
     findTags(tagList) {
         return $.map(tagList, (tag) => {
-            return $(tag).data().value
+            return $(tag).val()
         })
     }
 
     getTags() {
-        return this.findTags(this.$elem.find('.ui.visible'))
+        return this.findTags(this.$elem.find('option:selected'))
     }
 
     getContent() {

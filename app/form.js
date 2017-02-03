@@ -8,7 +8,6 @@ export class Form {
         this.$previewElem = $(previewSelector);
         this.items = [];
         this.generateItems();
-
         $('.ui.fluid.dropdown').dropdown();
 
         this.$elem.on('input', 'input', () => {
@@ -17,7 +16,7 @@ export class Form {
         this.$elem.on('keyup', 'textarea', () => {
             this.displayPreview()
         });
-        this.$elem.on('change', 'input', () => {
+        this.$elem.on('change', '.ui.fluid.dropdown', () => {
             this.displayPreview()
         });
 
