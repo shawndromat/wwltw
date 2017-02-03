@@ -137,7 +137,7 @@ class Form {
     }
 
     generateGoogleGroupUrl(){
-        let emailRecipent = encodeURIComponent('wwltw@googlegroups.com');
+        let emailRecipent = encodeURIComponent('wwltw-beach-hackathon@googlegroups.com');
         let emailSubject = encodeURIComponent(this.getSubject());
         let emailItems = this.items.map((item) => {
             return item.emailBodyContent()
