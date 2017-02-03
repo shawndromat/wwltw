@@ -44,9 +44,11 @@ export class Form {
                 this.items[i].openPivotalkEmails()
             }
         } else {
+            this.displayPreview()
             this.errors.map((error) => {
                 let $li = $(`<li>${error}</li>`)
-                this.$elem.find('.errors').append($li)
+                this.$elem.find('.form-errors').addClass('error')
+                this.$elem.find('.form-errors').append($li)
             })
         }
     }
@@ -72,7 +74,8 @@ export class Form {
 
     validate() {
         this.errors = []
-        this.$elem.find('.errors').empty();
+        this.$elem.find('.form-errors').removeClass('error')
+        this.$elem.find('.form-errors').empty();
 
         this.itemsValid()
         this.atLeastOneItem()
@@ -102,6 +105,9 @@ export class Form {
 
         if(!atLeastOneItem){
             this.errors.push('There must be atleast one item')
+            $('#item-wrapper').addClass('error')
+        } else {
+            $('#item-wrapper').removeClass('error')
         }
         return atLeastOneItem;
     }
@@ -109,8 +115,10 @@ export class Form {
     hasTeamName() {
         if(this.getTeamName() == ''){
             this.errors.push('Team name should not be empty');
+            $('.team-name-group').addClass('error');
             return false;
         }
+        $('.team-name-group').removeClass('error');
         return true;
     }
 

@@ -3,7 +3,11 @@ import {tagList} from './tagList';
 
 export class Item {
     constructor(id) {
+        this.validContent = true
+        this.validTags = true
         this.$elem = $(this.generateItem(id))
+        this.$contentGroup = this.$elem.find('.form-group.content')
+        this.$tagGroup = this.$elem.find('.form-group.tags')
     }
 
     findTags(tagList) {
@@ -33,7 +37,28 @@ export class Item {
 
     isValid() {
         if (this.isEmpty()) { return true }
-       return this.getContent() != '' && this.getTags().length > 0
+
+        this.validContent = this.getContent() != ''
+
+        if (this.validContent) {
+            this.$contentGroup.removeClass('error')
+            this.$contentGroup.find('span').empty()
+        } else {
+            this.$contentGroup.addClass('error')
+            this.$contentGroup.find('span').text('Content cannot be empty')
+        }
+
+        this.validTags = this.getTags().length > 0
+
+        if (this.validTags) {
+            this.$tagGroup.removeClass('error')
+            this.$tagGroup.find('span').empty()
+        } else {
+            this.$tagGroup.addClass('error')
+            this.$tagGroup.find('span').text('At least one tag required')
+        }
+
+        return this.validContent && this.validTags
     }
 
     formattedTags() {
@@ -92,9 +117,10 @@ export class Item {
     generateItem(id) {
         return `
                 <div data-item-id=${id} class="ui segment">
-                    <div class="form-group">
+                    <div class="form-group content">
                         <h3 for=${"item-" + id}>Item ${id}</h3>
-                        <textarea name=${"item-" + id} id=${"item-" + id} cols="30" rows="5" class="form-control"></textarea>
+                        <textarea name=${"item-" + id} id=${"item-" + id} cols="30" rows="3" class="form-control"></textarea>
+                        <span></span>
                     </div>
                     <div class="form-group tags">
                       <div class="checkbox">
@@ -104,6 +130,7 @@ export class Item {
                               ${this.populateTags()}
                           </select>
                       </div>
+                      <span></span>
                     </div>
                     <div class="form-group actions">
                       <div class="checkbox">

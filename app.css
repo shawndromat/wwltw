@@ -23,6 +23,21 @@
   background-color: #138078;
 }
 
+.error {
+  color: #9F3A38;
+}
+
+.error textarea, .error .ui.dropdown.fluid, .error .form-control {
+  border-color: #E0B4B4;
+  background: #FFF6F6;
+}
+
+ul.error {
+  margin-top: 15px;
+  border: #E0B4B4 1px solid;
+  border-radius: 4px;
+  padding: 20px 10px 20px 40px;
+}
 #email-preview ol {
   padding-left: 15px;
 }
