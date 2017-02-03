@@ -1,14 +1,14 @@
 import {escapeHtml} from './index';
-import {Item} from './item';
+import {Learning} from './learning';
 
 export class Form {
     constructor(formSelector, previewSelector) {
         this.$elem = $(formSelector);
         this.$teamName = this.$elem.find('#teamName');
         this.$previewElem = $(previewSelector);
-        this.items = [];
+        this.learnings = [];
         this.errors = [];
-        this.generateItems();
+        this.generateLearnings();
         $('.ui.fluid.dropdown').dropdown();
 
         this.$elem.on('input', 'input', () => {
@@ -40,14 +40,14 @@ export class Form {
         if (this.validate()) {
             window.open(this.generateGoogleGroupUrl(), "_blank" );
 
-            for (var i = 0; i < this.items.length; i++) {
-                this.items[i].openPivotalkEmails()
+            for (var i = 0; i < this.learnings.length; i++) {
+                this.learnings[i].openPivotalkEmails()
             }
         } else {
-            this.displayPreview()
+            this.displayPreview();
             this.errors.map((error) => {
-                let $li = $(`<li>${error}</li>`)
-                this.$elem.find('.form-errors').addClass('error')
+                let $li = $(`<li>${error}</li>`);
+                this.$elem.find('.form-errors').addClass('error');
                 this.$elem.find('.form-errors').append($li)
             })
         }
@@ -66,50 +66,50 @@ export class Form {
         return teamName ? `- ${teamName}` : ""
     }
 
-    getItems() {
-        return this.items.map((item) => {
-            return item.formattedContent();
+    getLearnings() {
+        return this.learnings.map((learning) => {
+            return learning.formattedContent();
         }).join("")
     }
 
     validate() {
-        this.errors = []
-        this.$elem.find('.form-errors').removeClass('error')
+        this.errors = [];
+        this.$elem.find('.form-errors').removeClass('error');
         this.$elem.find('.form-errors').empty();
 
-        this.itemsValid()
-        this.atLeastOneItem()
-        this.hasTeamName()
+        this.learningsValid();
+        this.atLeastOneLearning();
+        this.hasTeamName();
 
         return this.errors.length === 0
     }
 
-    invalidItems() {
-        return this.items.filter((item) => {
-            return !item.isValid()
+    invalidLearnings() {
+        return this.learnings.filter((learning) => {
+            return !learning.isValid()
         })
     }
 
-    itemsValid(){
-        let itemsAreValid = this.invalidItems().length === 0;
-        if(!itemsAreValid){
-            this.errors.push('Item must have content and tag')
+    learningsValid(){
+        let learningsAreValid = this.invalidLearnings().length === 0;
+        if(!learningsAreValid){
+            this.errors.push('Learning must have content and tag')
         }
-        return itemsAreValid
+        return learningsAreValid
     }
 
-    atLeastOneItem() {
-        let atLeastOneItem = this.items.filter((item) => {
-            return !item.isEmpty()
+    atLeastOneLearning() {
+        let atLeastOneLearning = this.learnings.filter((learning) => {
+            return !learning.isEmpty()
         }).length > 0;
 
-        if(!atLeastOneItem){
-            this.errors.push('There must be atleast one item')
-            $('#item-wrapper').addClass('error')
+        if(!atLeastOneLearning){
+            this.errors.push('There must be atleast one learning');
+            $('#learning-wrapper').addClass('error')
         } else {
-            $('#item-wrapper').removeClass('error')
+            $('#learning-wrapper').removeClass('error')
         }
-        return atLeastOneItem;
+        return atLeastOneLearning;
     }
 
     hasTeamName() {
@@ -125,10 +125,10 @@ export class Form {
     generateGoogleGroupUrl(){
         let emailRecipent = encodeURIComponent('wwltw-beach-hackathon@googlegroups.com');
         let emailSubject = encodeURIComponent(this.getSubject());
-        let emailItems = this.items.map((item) => {
-            return item.emailBodyContent()
+        let emailLearnings = this.learnings.map((learning) => {
+            return learning.emailBodyContent()
         }).join("");
-        let emailBody = encodeURIComponent(emailItems);
+        let emailBody = encodeURIComponent(emailLearnings);
         return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
     }
 
@@ -146,7 +146,7 @@ export class Form {
           <div class="col-md-3">Body:</div>
           <div class="col-md-9">
             <ol>
-              ${this.getItems()}
+              ${this.getLearnings()}
             </ol>
             <p>${this.getSignature()}</p>
           </div>
@@ -158,11 +158,11 @@ export class Form {
         this.$previewElem.html(this.generatePreview())
     }
 
-    generateItems() {
+    generateLearnings() {
         for (let i = 1; i < 4; i++) {
-            let item = new Item(i);
-            this.items.push(item);
-            this.$elem.find('#item-wrapper').append(item.$elem);
+            let learning = new Learning(i);
+            this.learnings.push(learning);
+            this.$elem.find('#learning-wrapper').append(learning.$elem);
         }
     }
 }

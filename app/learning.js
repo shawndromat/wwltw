@@ -1,12 +1,12 @@
 import {escapeHtml} from './index';
 import {tagList} from './tagList';
 
-export class Item {
+export class Learning {
     constructor(id) {
-        this.validContent = true
-        this.validTags = true
-        this.$elem = $(this.generateItem(id))
-        this.$contentGroup = this.$elem.find('.form-group.content')
+        this.validContent = true;
+        this.validTags = true;
+        this.$elem = $(this.generateLearning(id));
+        this.$contentGroup = this.$elem.find('.form-group.content');
         this.$tagGroup = this.$elem.find('.form-group.tags')
     }
 
@@ -25,7 +25,7 @@ export class Item {
     }
 
     getActions() {
-        let checkedActions = this.$elem.find('.actions input:checked')
+        let checkedActions = this.$elem.find('.actions input:checked');
         return $.map(checkedActions, (input) => {
             return input.value
         })
@@ -38,23 +38,23 @@ export class Item {
     isValid() {
         if (this.isEmpty()) { return true }
 
-        this.validContent = this.getContent() != ''
+        this.validContent = this.getContent() != '';
 
         if (this.validContent) {
-            this.$contentGroup.removeClass('error')
+            this.$contentGroup.removeClass('error');
             this.$contentGroup.find('span').empty()
         } else {
-            this.$contentGroup.addClass('error')
+            this.$contentGroup.addClass('error');
             this.$contentGroup.find('span').text('Content cannot be empty')
         }
 
-        this.validTags = this.getTags().length > 0
+        this.validTags = this.getTags().length > 0;
 
         if (this.validTags) {
-            this.$tagGroup.removeClass('error')
+            this.$tagGroup.removeClass('error');
             this.$tagGroup.find('span').empty()
         } else {
-            this.$tagGroup.addClass('error')
+            this.$tagGroup.addClass('error');
             this.$tagGroup.find('span').text('At least one tag required')
         }
 
@@ -114,12 +114,12 @@ export class Item {
 
     }
 
-    generateItem(id) {
+    generateLearning(id) {
         return `
-                <div data-item-id=${id} class="ui segment">
+                <div data-learning-id=${id} class="ui segment">
                     <div class="form-group content">
-                        <h3 for=${"item-" + id}>Item ${id}</h3>
-                        <textarea name=${"item-" + id} id=${"item-" + id} cols="30" rows="3" class="form-control"></textarea>
+                        <h3 for=${"learning-" + id}>Learning ${id}</h3>
+                        <textarea name=${"learning-" + id} id=${"learning-" + id} cols="30" rows="3" class="form-control"></textarea>
                         <span></span>
                     </div>
                     <div class="form-group tags">
