@@ -133,7 +133,6 @@ export class Learning {
                     </div>
                     <div class="form-group actions">
                       <div class="checkbox">
-                        <h4>Actions</h4>
                         <label><input type="checkbox" name="action" value="send-to-pivotalk"> Send to Pivotalk</label>
                       </div>
                     </div>
