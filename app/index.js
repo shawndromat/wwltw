@@ -65,7 +65,7 @@ class Item {
     generateItem(id) {
         return `
 
-                <div data-item-id=${id}>
+                <div data-item-id=${id} class="ui segment">
                     <div class="form-group">
                         <h3 for=${"item-" + id}>Item ${id}</h3>
                         <textarea name=${"item-" + id} id=${"item-" + id} cols="30" rows="5" class="form-control"></textarea>
@@ -93,13 +93,13 @@ class Form {
         this.generateItems();
         this.$elem.on('input', 'input', () => {
             this.displayPreview()
-        })
+        });
         this.$elem.on('keyup', 'textarea', () => {
             this.displayPreview()
-        })
+        });
         this.$elem.on('change', 'input', () => {
             this.displayPreview()
-        })
+        });
         this.$elem.on('submit', (e) => {
             this.onSubmit(e);
         });
@@ -158,7 +158,7 @@ class Form {
 
     sendToPivotalkButton() {
         if (this.getTeamName() !== "" && this.getItems() !== "") {
-            return `<a class="btn btn-primary" target="_blank" href=${this.generatePivotalkUrl()}>Send to Pivotalk</a>`
+            return `<a class="btn btn-primary pivotalkbtn" target="_blank" href=${this.generatePivotalkUrl()}>Send to Pivotalk</a>`
         } else {
             return ""
         }
