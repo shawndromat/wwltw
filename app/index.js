@@ -25,6 +25,13 @@ class Item {
         return escapeHtml(this.$elem.find('textarea').val())
     }
 
+    getActions() {
+      let checkedActions = this.$elem.find('.actions input:checked')
+      return $.map(checkedActions, (input) => {
+        return input.value
+      })
+    }
+
     formattedTags() {
         let tags = this.getTags();
         return (tags.length > 0) ? `Tags: ${tags.join(', ')}` : ''
@@ -44,10 +51,10 @@ class Item {
     }
 
     emailBodyContent() {
-        let tags = this.getTags().join(', ')
+        let tags = this.formattedTags()
         let content = this.getContent()
         if (content !== "" && tags !== "") {
-            return `${content}\nTags: ${tags}\n`
+            return `${content}\n${tags}\n\n`
         } else {
             return ""
         }
@@ -62,26 +69,47 @@ class Item {
         return tagHtml;
     }
 
+    generatePivotalkUrl() {
+        let emailRecipent = encodeURIComponent('pivotalk+wwltw@gmail.com');
+        let emailSubject = encodeURIComponent('WWLTW to Pivotalk');
+        let emailBody = encodeURIComponent(this.emailBodyContent());
+        return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
+    }
+
+    openPivotalkEmails() {
+      if(this.getContent() !== ""
+          && this.getTags().length > 0
+          && this.getActions().indexOf('send-to-pivotalk') !== -1) {
+        window.open(this.generatePivotalkUrl(), "_blank" )
+      }
+
+    }
+
     generateItem(id) {
         return `
-
                 <div data-item-id=${id} class="ui segment">
                     <div class="form-group">
                         <h3 for=${"item-" + id}>Item ${id}</h3>
                         <textarea name=${"item-" + id} id=${"item-" + id} cols="30" rows="5" class="form-control"></textarea>
                     </div>
-                    <div class="checkbox">
-                        <h4>Tags </h4>
-                        <select name="tags" multiple="" class="ui fluid search dropdown">
-                            <option value="">Tags</option>
-                            ${this.populateTags()}
-                        </select>
+                    <div class="form-group tags">
+                      <div class="checkbox">
+                          <h4>Tags</h4>
+                          <select name="tags" multiple="" class="ui fluid search dropdown">
+                              <option value="">Tags</option>
+                              ${this.populateTags()}
+                          </select>
+                      </div>
+                    </div>
+                    <div class="form-group actions">
+                      <div class="checkbox">
+                        <h4>Actions</h4>
+                        <label><input type="checkbox" name="action" value="send-to-pivotalk"> Send to Pivotalk</label>
+                      </div>
                     </div>
                 </div>
             `
     }
-
-
 }
 
 class Form {
@@ -115,6 +143,10 @@ class Form {
     onSubmit(e) {
         e.preventDefault();
         window.open(this.generateGoogleGroupUrl(), "_blank" )
+
+        this.items.forEach((item) => {
+          item.openPivotalkEmails()
+        })
     }
 
     getTeamName() {
@@ -146,24 +178,6 @@ class Form {
         return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
     }
 
-    generatePivotalkUrl() {
-        let emailRecipent = encodeURIComponent('pivotalk+wwltw@gmail.com');
-        let emailSubject = encodeURIComponent(this.getSubject());
-        let emailItems = this.items.map((item) => {
-            return item.emailBodyContent()
-        }).join("");
-        let emailBody = encodeURIComponent(emailItems);
-        return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
-    }
-
-    sendToPivotalkButton() {
-        if (this.getTeamName() !== "" && this.getItems() !== "") {
-            return `<a class="btn btn-primary pivotalkbtn" target="_blank" href=${this.generatePivotalkUrl()}>Send to Pivotalk</a>`
-        } else {
-            return ""
-        }
-    }
-
     generatePreview() {
         return `
       <table>
@@ -187,7 +201,6 @@ class Form {
           </tr>
         </tbody>
       </table>
-      ${this.sendToPivotalkButton()}
       `
     }
 
