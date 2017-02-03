@@ -70,27 +70,23 @@ export class Form {
 
     generatePreview() {
         return `
-      <table>
-        <tbody>
-          <tr>
-            <td class="col-xs-3">To:</td>
-            <td class="col-xs-9">wwltw@pivotal.io</td>
-          </tr>
-          <tr>
-            <td class="col-xs-3">Subject:</td>
-            <td class="col-xs-9">${this.getSubject()}</td>
-          </tr>
-          <tr>
-            <td class="col-xs-3">Body:</td>
-            <td class="col-xs-9">
-              <ol>
-                ${this.getItems()}
-              </ol>
-              <p>${this.getSignature()}</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="row">
+          <div class="col-md-3">To:</div>
+          <div class="col-md-9">wwltw@pivotal.io</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Subject:</div>
+          <div class="col-md-9">${this.getSubject()}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Body:</div>
+          <div class="col-md-9">
+            <ol>
+              ${this.getItems()}
+            </ol>
+            <p>${this.getSignature()}</p>
+          </div>
+        </div>
       `
     }
 

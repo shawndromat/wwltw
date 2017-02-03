@@ -1,6 +1,5 @@
-#email-preview tr td:first-child{
+#email-preview .row div:first-child{
   text-align: right;
-  vertical-align: top;
 }
 
 .navbar{
@@ -22,4 +21,14 @@
 .pivotalkbtn{
   margin-top: 15px;
   background-color: #138078;
+}
+
+#email-preview ol {
+  padding-left: 15px;
+}
+
+li {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: normal;
 }
