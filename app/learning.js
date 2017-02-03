@@ -98,20 +98,19 @@ export class Learning {
         return tagHtml;
     }
 
-    generatePivotalkUrl() {
+    generatePivotalkUrl(teamName) {
         let emailRecipent = encodeURIComponent('pivotalk+wwltw@gmail.com');
         let emailSubject = encodeURIComponent('WWLTW to Pivotalk');
-        let emailBody = encodeURIComponent(this.emailBodyContent());
+        let emailBody = encodeURIComponent(`${this.emailBodyContent()} \n - ${teamName}`);
         return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
     }
 
-    openPivotalkEmails() {
+    openPivotalkEmails(teamName) {
         if(this.getContent() !== ""
             && this.getTags().length > 0
             && this.getActions().indexOf('send-to-pivotalk') !== -1) {
-            window.open(this.generatePivotalkUrl(), "_blank" )
+            window.open(this.generatePivotalkUrl(teamName), "_blank" )
         }
-
     }
 
     generateLearning(id) {

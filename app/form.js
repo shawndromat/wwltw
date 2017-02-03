@@ -41,7 +41,7 @@ export class Form {
             window.open(this.generateGoogleGroupUrl(), "_blank" );
 
             for (var i = 0; i < this.learnings.length; i++) {
-                this.learnings[i].openPivotalkEmails()
+                this.learnings[i].openPivotalkEmails(this.getTeamName())
             }
         } else {
             this.displayPreview();
@@ -128,6 +128,7 @@ export class Form {
         let emailLearnings = this.learnings.map((learning) => {
             return learning.emailBodyContent()
         }).join("");
+        emailLearnings += `\n - ${this.getTeamName()}`;
         let emailBody = encodeURIComponent(emailLearnings);
         return `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${emailRecipent}&su=${emailSubject}&body=${emailBody}`
     }
