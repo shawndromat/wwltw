@@ -128,9 +128,7 @@ class Form {
         this.$elem.on('change', 'input', () => {
             this.displayPreview()
         });
-        this.$elem.on('submit', (e) => {
-            this.onSubmit(e);
-        });
+
         this.displayPreview()
     }
 
@@ -138,6 +136,30 @@ class Form {
         return tagList.map((index, tag) => {
             return $(tag).val()
         })
+    }
+
+    validateForm() {
+        this.form({
+            fields: {
+                name: {
+                    identifier: 'teamName',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'You must enter a team name'
+                        }
+                    ]
+                }
+            }
+        }, {
+            on: 'blur',
+            inline: true,
+            onSuccess: function(e) {
+                debugger;
+                e.preventDefault();
+                alert('SUMBITTED');
+            },
+        });
     }
 
     onSubmit(e) {
@@ -219,17 +241,22 @@ class Form {
 
 
 $(() => {
-    new Form('form', '#email-preview');
+    var form = new Form('form', '#email-preview');
     $('.ui.fluid.dropdown').dropdown();
-    $('.ui.form').form({
-        teamName: {
-            identifier: 'teamName',
-            rules: [
-                {
-                    type: 'empty',
-                    prompt: 'Please enter a Team Name'
-                }
-            ]
-        }
-    })
+    $('.ui.form')
+        .form({
+            name: {
+                identifier  : 'teamName',
+                rules: [
+                    {
+                        type   : 'empty',
+                        prompt : 'Please enter your team name'
+                    }
+                ]
+            }
+        }, {
+            onSuccess: function(e) {
+                form.onSubmit(e);
+            }
+        });
 });
