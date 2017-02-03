@@ -123,7 +123,7 @@ export class Form {
     }
 
     generateGoogleGroupUrl(){
-        let emailRecipent = encodeURIComponent('wwltw-beach-hackathon@googlegroups.com');
+        let emailRecipent = encodeURIComponent('wwltw@pivotal.io');
         let emailSubject = encodeURIComponent(this.getSubject());
         let emailLearnings = this.learnings.map((learning) => {
             return learning.emailBodyContent()
