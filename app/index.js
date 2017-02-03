@@ -165,10 +165,9 @@ class Form {
     onSubmit(e) {
         e.preventDefault();
         window.open(this.generateGoogleGroupUrl(), "_blank" )
-
-        this.items.forEach((item) => {
-          item.openPivotalkEmails()
-        })
+        for (var i = 0; i < this.items.length; i++) {
+          this.items[i].openPivotalkEmails()
+        }
     }
 
     getTeamName() {
